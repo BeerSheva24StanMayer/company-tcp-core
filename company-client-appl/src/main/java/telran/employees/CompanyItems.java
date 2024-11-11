@@ -117,7 +117,7 @@ public static Item[] getItems(Company company) {
     static void getDepartmentBudget(InputOutput io) {
         String department = readDepartment(io);
         int budget = company.getDepartmentBudget(department);
-        String line = budget == 0 ? "no employees woring in entered department"
+        String line = budget == 0 ? "no employees working in entered department"
                 : "Budget of enetered department is " + budget;
         io.writeLine(line);
     }

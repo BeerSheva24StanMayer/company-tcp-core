@@ -53,8 +53,8 @@ public class CompanyProtocol implements Protocol{
         Response res = null;
         long id = Integer.valueOf(data);
         try {
-            company.removeEmployee(id);
-            res = new Response(ResponseCode.OK, "");
+            Employee employee = company.removeEmployee(id);
+            res = new Response(ResponseCode.OK, employee.toString());
         } catch (NoSuchElementException e) {
             res = new Response(ResponseCode.WRONG_DATA, 
                     "This ID has not been found");
