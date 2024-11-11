@@ -84,7 +84,6 @@ public class CompanyProtocol implements Protocol{
 
     private Response getDepartments() {
         String[] departments = company.getDepartments();
-        // JSONArray depsJSON = new JSONArray(departments);
         return new Response(ResponseCode.OK, Arrays.toString(departments));
     }
 
