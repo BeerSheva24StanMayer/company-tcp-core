@@ -53,6 +53,7 @@ public class CompanyProtocol implements Protocol{
         } catch (IllegalStateException e) {
             res = getWRONGresponse("This ID is already exists");
         }
+        save();
         return res;
     }
 
@@ -65,6 +66,7 @@ public class CompanyProtocol implements Protocol{
         } catch (NoSuchElementException e) {
             res = getWRONGresponse("This ID has not been found");
         }
+        save();
         return res;
     }
 
@@ -98,7 +100,7 @@ public class CompanyProtocol implements Protocol{
         return getOKresponse(buget + "");
     }
 
-    private Response save(String string) {
+    private Response save() {
         Response res = null;
         if (company instanceof Persistable persistable) {
             try {

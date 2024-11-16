@@ -1,16 +1,13 @@
 package telran.employees;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
+import java.util.*;
 import org.json.JSONArray;
-
 import telran.net.*;
 
-public class CompanyTcpProxy implements Company{
-    TcpClient client;
+public class CompanyNetProxy implements Company {
+    NetworkClient client;
 
-    public CompanyTcpProxy(TcpClient client) {
+    public CompanyNetProxy(NetworkClient client) {
         this.client = client;
     }
 
@@ -22,7 +19,6 @@ public class CompanyTcpProxy implements Company{
     @Override
     public void addEmployee(Employee employee) {
         client.sendAndReceive("addEmployee", employee.toString());
-        client.sendAndReceive("save", "");
     }
 
     @Override
@@ -54,7 +50,6 @@ public class CompanyTcpProxy implements Company{
     @Override
     public Employee removeEmployee(long id) {
         String remove = client.sendAndReceive("removeEmployee", id + "");
-        client.sendAndReceive("save", "");
         return Employee.getEmployeeFromJSON(remove);
     }
 
