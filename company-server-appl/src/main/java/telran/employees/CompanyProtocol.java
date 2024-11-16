@@ -41,10 +41,9 @@ public class CompanyProtocol implements Protocol{
         Employee employee = Employee.getEmployeeFromJSON(data);
         try {
             company.addEmployee(employee);
-            res = new Response(ResponseCode.OK, "");
+            res = getOKresponse("");
         } catch (IllegalStateException e) {
-            res = new Response(ResponseCode.WRONG_DATA, 
-                    "This ID is already exists");
+            res = getWRONGresponse("This ID is already exists");
         }
         return res;
     }
@@ -54,10 +53,9 @@ public class CompanyProtocol implements Protocol{
         long id = Integer.valueOf(data);
         try {
             Employee employee = company.removeEmployee(id);
-            res = new Response(ResponseCode.OK, employee.toString());
+            res = getOKresponse(employee.toString());
         } catch (NoSuchElementException e) {
-            res = new Response(ResponseCode.WRONG_DATA, 
-                    "This ID has not been found");
+            res = getWRONGresponse("This ID has not been found");
         }
         return res;
     }
@@ -67,10 +65,9 @@ public class CompanyProtocol implements Protocol{
         long id = Long.valueOf(data);
         Employee employee = company.getEmployee(id);
         if (employee != null) {
-            res = new Response(ResponseCode.OK, employee.toString());
+            res = getOKresponse(employee.toString());
         } else {
-            res = new Response(ResponseCode.WRONG_DATA, 
-                    "This ID has not been found");
+            res = getWRONGresponse("This ID has not been found");
         }
         return res;
     }
@@ -79,17 +76,18 @@ public class CompanyProtocol implements Protocol{
         Manager[] managers = company.getManagersWithMostFactor();
         String[] jsonStrings = Arrays.stream(managers).map(Manager::toString).toArray(String[]::new);
         JSONArray jsonArray = new JSONArray(jsonStrings);
-        return new Response(ResponseCode.OK, jsonArray.toString());
+        return getOKresponse(jsonArray.toString());
     }
 
     private Response getDepartments() {
         String[] departments = company.getDepartments();
-        return new Response(ResponseCode.OK, Arrays.toString(departments));
+        JSONArray jsonArray = new JSONArray(departments);
+        return getOKresponse(jsonArray.toString());
     }
 
     private Response getDepartmentBudget(String data) {
         int buget = company.getDepartmentBudget(data);
-        return new Response(ResponseCode.OK, buget + "");
+        return getOKresponse(buget + "");
     }
 
     private Response save() {
@@ -97,11 +95,20 @@ public class CompanyProtocol implements Protocol{
         if (company instanceof Persistable persistable) {
             try {
                 persistable.saveToFile(FILE_NAME);
-                res = new Response(ResponseCode.OK, "");
+                res = getOKresponse("");
             } catch (Exception e) {
-                res = new Response(ResponseCode.WRONG_DATA, e.getMessage());
+                res = getWRONGresponse(e.getMessage());
             }
         }
         return res;
     }
+
+    private Response getOKresponse(String string) {
+        return new Response(ResponseCode.OK, string);
+    }
+
+    private Response getWRONGresponse(String string) {
+        return new Response(ResponseCode.WRONG_DATA, string);
+    }
+
 }

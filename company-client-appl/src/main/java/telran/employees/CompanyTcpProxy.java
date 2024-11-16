@@ -32,8 +32,9 @@ public class CompanyTcpProxy implements Company{
 
     @Override
     public String[] getDepartments() {
-    
-        return client.sendAndReceive("getDepartments", "").split(",");
+        String departments = client.sendAndReceive("getDepartments", "");
+        JSONArray jsonArray = new JSONArray(departments);
+        return jsonArray.toList().toArray(String[]::new);
     }
 
     @Override
