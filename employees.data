@@ -3,3 +3,4 @@
 {"basicSalary":10000,"className":"telran.employees.Manager","id":1003,"department":"Management","factor":2}
 {"basicSalary":10000,"className":"telran.employees.Manager","id":1004,"department":"Management","factor":3}
 {"hours":300,"basicSalary":20000,"className":"telran.employees.WageEmployee","id":1007,"department":"Development","wage":5}
+{"basicSalary":20000,"className":"telran.employees.Employee","id":1050,"department":"QA"}

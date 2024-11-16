@@ -1,5 +1,7 @@
 package telran.employees;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
 
@@ -21,18 +23,24 @@ public class CompanyProtocol implements Protocol{
 
     @Override
     public Response getResponse(Request request) {
-        String type = request.requestType();
-        String data = request.requestData();
-        Response response = switch (type) {
-            case "addEmployee" -> addEmployee(data);
-            case "removeEmployee" -> removeEmployee(data);
-            case "getManagersWithMostFactor" -> getManagersWithMostFactor();
-            case "getDepartments" -> getDepartments();
-            case "getEmployee" -> getEmployee(data);
-            case "getDepartmentBudget" -> getDepartmentBudget(data);
-            case "save" -> save();
-            default -> new Response(ResponseCode.WRONG_TYPE, type + " is wrong type of command");
-        };
+        String requestType = request.requestType();
+        String requestData = request.requestData();
+        Response response = null;
+        try {
+            Method method = CompanyProtocol.class.getDeclaredMethod(requestType, String.class);
+            method.setAccessible(true);
+            response = (Response) method.invoke(this, requestData);
+        } catch (NoSuchMethodException e) {
+            response = new Response(ResponseCode.WRONG_TYPE, requestType + " Wrong type");
+           
+        } catch (InvocationTargetException e) {
+            Throwable causeExc = e.getCause();
+            String message = causeExc == null ? e.getMessage() : causeExc.getMessage();
+            response = new Response(ResponseCode.WRONG_DATA, message);
+        } catch (Exception e){
+            //only for finishing Server and printing out Exception full stack
+            throw new RuntimeException(e);
+        }
         return response;
     }
 
@@ -90,7 +98,7 @@ public class CompanyProtocol implements Protocol{
         return getOKresponse(buget + "");
     }
 
-    private Response save() {
+    private Response save(String string) {
         Response res = null;
         if (company instanceof Persistable persistable) {
             try {
