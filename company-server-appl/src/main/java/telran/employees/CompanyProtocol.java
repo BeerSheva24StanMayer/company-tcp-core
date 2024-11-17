@@ -53,7 +53,6 @@ public class CompanyProtocol implements Protocol{
         } catch (IllegalStateException e) {
             res = getWRONGresponse("This ID is already exists");
         }
-        // save();
         return res;
     }
 
@@ -66,7 +65,6 @@ public class CompanyProtocol implements Protocol{
         } catch (NoSuchElementException e) {
             res = getWRONGresponse("This ID has not been found");
         }
-        // save();
         return res;
     }
 
@@ -99,19 +97,6 @@ public class CompanyProtocol implements Protocol{
         int buget = company.getDepartmentBudget(data);
         return getOKresponse(buget + "");
     }
-
-    // private Response save() {
-    //     Response res = null;
-    //     if (company instanceof Persistable persistable) {
-    //         try {
-    //             persistable.saveToFile(FILE_NAME);
-    //             res = getOKresponse("");
-    //         } catch (Exception e) {
-    //             res = getWRONGresponse(e.getMessage());
-    //         }
-    //     }
-    //     return res;
-    // }
 
     private Response getOKresponse(String string) {
         return new Response(ResponseCode.OK, string);
