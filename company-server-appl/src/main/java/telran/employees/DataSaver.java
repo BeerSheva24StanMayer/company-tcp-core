@@ -2,33 +2,26 @@ package telran.employees;
 
 import telran.io.Persistable;
 
-public class DataSaver implements Runnable {
-    private final int SAVE_INTERVAL = 3600;
-    private final String SOURCE_FILE = "employees.data";
-
+public class DataSaver extends Thread {
     private int saveInterval;
     private String sourceFile;
     private Persistable persistable;
 
-    public DataSaver(Persistable persistable) {
+    public DataSaver(Persistable persistable, String sourceFile, int saveInterval) {
         this.persistable = persistable;
-        this.saveInterval = SAVE_INTERVAL;
-        this.sourceFile = SOURCE_FILE;
+        this.saveInterval = saveInterval;
+        this.sourceFile = sourceFile;
+        setDaemon(true);
     }
 
     @Override
     public void run() {
-        Thread thread = new Thread(() -> {
-            while (true) {
-                try {
-                    Thread.sleep(saveInterval);
-                    persistable.saveToFile(sourceFile);
-                } catch (InterruptedException e) {
-                    
-                }
-
+        while (true) {
+            try {
+                persistable.saveToFile(sourceFile);
+                sleep(saveInterval);
+            } catch (InterruptedException e) {
             }
-        });
-        thread.start();
+        }
     }
 }

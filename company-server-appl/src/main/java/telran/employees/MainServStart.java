@@ -1,22 +1,23 @@
 package telran.employees;
-import java.io.ObjectInputFilter.Config;
+
 
 import telran.io.Persistable;
-import telran.net.Protocol;
 import telran.net.TcpServer;
 
 public class MainServStart {
     private static final int PORT = 4000;
-    private static final String FILE_NAME = "employees.data";
+    private static final int SAVE_INTERVAL = 3600;
+    private static final String SOURCE_FILE = "employees.data";
 
     public static void main(String[] args) {
         Company company = new CompanyImpl();
-        TcpServer server = new TcpServer(new CompanyProtocol(company), PORT);
         if (company instanceof Persistable persistable) {
-            persistable.restoreFromFile(FILE_NAME);
-            DataSaver dataSaver = new DataSaver(persistable);
-            dataSaver.run();;
+            persistable.restoreFromFile(SOURCE_FILE);
+            DataSaver dataSaver = new DataSaver(persistable, SOURCE_FILE, SAVE_INTERVAL);
+            dataSaver.start();
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> persistable.saveToFile(SOURCE_FILE)));
         }
+        TcpServer server = new TcpServer(new CompanyProtocol(company), PORT);
         server.run();
     }
 }
